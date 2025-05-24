@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  # Stdio transport server (for CLI use)
+  gemini-mcp-stdio:
+    build: .
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LOG_LEVEL=info
+    stdin_open: true  # Required for stdio transport
+    tty: true         # Improves terminal handling
+
+  # HTTP transport server (for network use)
+  gemini-mcp-http:
+    build: .
+    command: node dist/http-server.js
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PORT=3000
+      - LOG_LEVEL=info
+      - REQUEST_TIMEOUT_MS=30000
+    ports:
+      - "3000:3000"
